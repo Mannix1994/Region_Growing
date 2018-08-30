@@ -35,8 +35,11 @@ int main(int argc, char const **argv) {
     M.start_grow(denoise, filled, edgeMap, 91, 468, 2);
     timer.rlog("part4");
 
-    M.start_grow(denoise, filled, edgeMap, 50, 173, 4);
-    timer.rlog("part4");
+    M.start_grow(denoise, filled, edgeMap, 50, 173, 2);
+    timer.rlog("part5");
+
+    M.start_grow(denoise, filled, edgeMap, 247, 422, 4);
+    timer.rlog("part6");
 
 //    imshow("Original Image", denoise);
     imshow("filled Image", filled);

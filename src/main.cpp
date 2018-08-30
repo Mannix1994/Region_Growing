@@ -26,17 +26,17 @@ int main(int argc, char const **argv) {
     Mat filled(denoise.rows, denoise.cols, CV_8UC3, Scalar(0, 0, 0));
 
     grow M;
-    M.setThresholds(15, 15);
+    M.setThresholds(12, 15);
     timer.rlog("part2");
 
-    M.start_grow(denoise, filled, edgeMap, 284, 106, 2);
+    M.start_grow(denoise, filled, edgeMap, 267, 108, 2);
     timer.rlog("part3");
 
-    M.start_grow(denoise, filled, edgeMap, 11, 361, 2);
+    M.start_grow(denoise, filled, edgeMap, 91, 468, 2);
     timer.rlog("part4");
 
-    M.start_grow(denoise, filled, edgeMap, 99, 459, 2);
-    timer.rlog("part5");
+    M.start_grow(denoise, filled, edgeMap, 50, 173, 4);
+    timer.rlog("part4");
 
 //    imshow("Original Image", denoise);
     imshow("filled Image", filled);

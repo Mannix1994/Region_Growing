@@ -32,10 +32,10 @@ int main(int argc, char const **argv) {
     M.start_grow(denoise, filled, edgeMap, 284, 106, 2);
     timer.rlog("part3");
 
-    M.start_grow(denoise, filled, edgeMap, 11, 361, 2);
+    M.start_grow(denoise, filled, edgeMap, 10, 200, 3);
     timer.rlog("part4");
 
-    M.start_grow(denoise, filled, edgeMap, 99, 459, 2);
+    M.start_grow(denoise, filled, edgeMap, 99, 459, 4);
     timer.rlog("part5");
 
 //    imshow("Original Image", denoise);

@@ -52,7 +52,7 @@ void grow::modifyPixel(Mat &input, int x, int y, int colorflag) {
  * colorflag --> to determine the color to be filled with
  */
 void grow::start_grow(Mat input, Mat filled, Mat edgeMap, int row_index, int col_index, int colorflag) {
-    compute_distance(input, col_index, row_index, distances);
+    compute_distance(input, row_index, col_index, distances);
 
     int x, y;
     long int count = 1;

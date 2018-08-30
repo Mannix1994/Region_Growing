@@ -21,10 +21,13 @@ int main(int argc, char const **argv) {
     grow M(12.5);
     timer.rlog("part2");
 
-    M.start_grow(denoise, filled, edgeMap, 284, 106, 2);
+    M.start_grow(denoise, filled, edgeMap, 267, 108, 2);
     timer.rlog("part3");
 
-    M.start_grow(denoise, filled, edgeMap, 10, 351, 2);
+    M.start_grow(denoise, filled, edgeMap, 91, 468, 2);
+    timer.rlog("part4");
+
+    M.start_grow(denoise, filled, edgeMap, 50, 173, 4);
     timer.rlog("part4");
 
 //    imshow("Original Image", denoise);

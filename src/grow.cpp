@@ -11,42 +11,32 @@ using namespace cv;
 /**
  * Constructor sets default values to colorThreshold and whiteThreshold
  */
-grow::grow(int colorThreshold, int whiteThreshold) : colorThreshold(colorThreshold), whiteThreshold(whiteThreshold)
-{
+grow::grow(double colorThreshold) : colorThreshold(colorThreshold) {
     init_cuda();
-}
-
-bool grow::colorDistance(int i0, int j0)
-{
-    return distances.at<float>(i0,j0)<colorThreshold;
 }
 
 /**
  * Function to modify pixel values at a point as per seed pixel
  */
-void grow::modifyPixel(Mat &input, const int x, const int y, const int colorflag)
-{
+void grow::modifyPixel(Mat &input, int x, int y, int colorflag) {
     Vec3b &colorC = input.at<Vec3b>(x, y);
 
     //Yellow Pixel
-    if (colorflag == 2)
-    {
+    if (colorflag == 2) {
         colorC[0] = 0;
         colorC[1] = 255;
         colorC[2] = 255;
     }
 
     //Green Pixel
-    if (colorflag == 3)
-    {
+    if (colorflag == 3) {
         colorC[0] = 0;
         colorC[1] = 255;
         colorC[2] = 0;
     }
 
     //Red Pixel
-    if (colorflag == 4)
-    {
+    if (colorflag == 4) {
         colorC[0] = 0;
         colorC[1] = 0;
         colorC[2] = 255;
@@ -61,17 +51,16 @@ void grow::modifyPixel(Mat &input, const int x, const int y, const int colorflag
  * sY --> Seed Pixel y value
  * colorflag --> to determine the color to be filled with
  */
-void grow::start_grow(Mat input, Mat filled, Mat edgeMap, const int row_index, const int col_index, const int colorflag)
-{
-    compute_distance(input,col_index,row_index,distances);
+void grow::start_grow(Mat input, Mat filled, Mat edgeMap, int row_index, int col_index, int colorflag) {
+    compute_distance(input, col_index, row_index, distances);
 
     int x, y;
     long int count = 1;
     String s = "";
     Vec3b seed = input.at<Vec3b>(row_index, col_index);
-    vector < vector<bool> > reach(input.rows, vector<bool>(input.cols, false));
+    vector<vector<bool> > reach(input.rows, vector<bool>(input.cols, false));
 
-    list < pair<int, int> > queue;
+    list<pair<int, int> > queue;
 
     reach[row_index][col_index] = true;
 
@@ -79,21 +68,17 @@ void grow::start_grow(Mat input, Mat filled, Mat edgeMap, const int row_index, c
 
     queue.emplace_back(make_pair(row_index, col_index));
 
-    auto helper_lambda = [&](int lx, int ly)
-        {
-            if (colorDistance(lx,ly))
-            {
-                reach[lx][ly] = true;
-                queue.emplace_back(make_pair(lx, ly));
-                modifyPixel(filled, lx, ly, colorflag);
-                ++count;
-            }
-            else
-                modifyPixel(edgeMap, lx, ly, colorflag);
-        };
+    auto helper_lambda = [&](int lx, int ly) {
+        if (colorDistance(lx, ly)) {
+            reach[lx][ly] = true;
+            queue.emplace_back(make_pair(lx, ly));
+            modifyPixel(filled, lx, ly, colorflag);
+            ++count;
+        } else
+            modifyPixel(edgeMap, lx, ly, colorflag);
+    };
 
-    while (!queue.empty())
-    {
+    while (!queue.empty()) {
         x = queue.front().first;
         y = queue.front().second;
         queue.pop_front();
@@ -130,13 +115,4 @@ void grow::start_grow(Mat input, Mat filled, Mat edgeMap, const int row_index, c
         if (x - 1 >= 0 && y - 1 >= 0 && (!reach[x - 1][y - 1]))
             helper_lambda(x - 1, y - 1);
     }
-}
-
-/**
- * Funtion to set both the thresholds
- */
-void grow::setThresholds(const int colorThreshold, const int whiteThreshold)
-{
-    this->colorThreshold = colorThreshold;
-    this->whiteThreshold = whiteThreshold;
 }

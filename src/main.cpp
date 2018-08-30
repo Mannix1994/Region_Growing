@@ -1,17 +1,10 @@
 #include <cstdlib>
 #include <opencv2/opencv.hpp>
-#include <opencv2/highgui/highgui.hpp>
-#include <string>
-#include <sstream>
-#include <list>
-#include "Color.hpp"
-#include <chrono>
 #include "grow.h"
 #include "timer.h"
 
 using namespace std;
 using namespace cv;
-using namespace std::chrono;
 
 int main(int argc, char const **argv) {
     Timer timer;
@@ -25,18 +18,14 @@ int main(int argc, char const **argv) {
     Mat edgeMap(denoise.rows, denoise.cols, CV_8UC3, Scalar(0, 0, 0));
     Mat filled(denoise.rows, denoise.cols, CV_8UC3, Scalar(0, 0, 0));
 
-    grow M;
-    M.setThresholds(15, 15);
+    grow M(12.5);
     timer.rlog("part2");
 
     M.start_grow(denoise, filled, edgeMap, 284, 106, 2);
     timer.rlog("part3");
 
-    M.start_grow(denoise, filled, edgeMap, 10, 200, 3);
+    M.start_grow(denoise, filled, edgeMap, 10, 351, 2);
     timer.rlog("part4");
-
-    M.start_grow(denoise, filled, edgeMap, 99, 459, 4);
-    timer.rlog("part5");
 
 //    imshow("Original Image", denoise);
     imshow("filled Image", filled);

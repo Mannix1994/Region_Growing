@@ -1,7 +1,16 @@
 cmake_minimum_required(VERSION 2.8)
-project( opencv )
-find_package( OpenCV REQUIRED )
-set(CMAKE_BUILD_TYPE Debug)
-add_executable( main src/main.cpp src/CIEDE2000.cpp src/grow.cpp)
-target_link_libraries( main ${OpenCV_LIBS} )
+project(RG)
+
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ../run)
+
+set(OpenCV_DIR "/usr/local/opencv320/share/OpenCV")
+find_package(OpenCV 3 REQUIRED)
+
+file(GLOB INC src/*.hpp)
+file(GLOB SRC src/*.cpp)
+
+add_executable( ${PROJECT_NAME} ${INC} ${SRC})
+
+target_link_libraries( ${PROJECT_NAME} ${OpenCV_LIBS} )
+
 add_definitions(-std=c++11)

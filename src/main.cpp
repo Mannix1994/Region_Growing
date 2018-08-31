@@ -1,10 +1,5 @@
 #include <cstdlib>
 #include <opencv2/opencv.hpp>
-#include <opencv2/highgui/highgui.hpp>
-#include <string>
-#include <sstream>
-#include <list>
-#include "Color.hpp"
 #include <chrono>
 #include "grow.h"
 #include "timer.h"

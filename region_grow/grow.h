@@ -51,10 +51,23 @@ private:
     double colorThreshold;
     Mat distances;
 
+    /**
+     * return if the color distance dist between pixel(i0,j0) and seed pixel is smaller than colorThreshold
+     * @param i0 pixel's row index
+     * @param j0 pixel's col index
+     * @return return true if dist<colorThreshold
+     */
     inline bool colorDistance(int i0, int j0){
         return distances.at<float>(i0, j0) < colorThreshold;
     }
 
+    /**
+     * modify pixel's color
+     * @param input the mat has the pixel you wang change color
+     * @param row pixel's row index
+     * @param col pixel's col index
+     * @param color the Color you want to change pixel to
+     */
     void modifyPixel(Mat &input, int x, int y, Color color);
 };
 

@@ -8,7 +8,7 @@ file(GLOB SRC *.cpp)
 
 add_subdirectory(cuda)
 
-add_library( ${MODULE_NAME} ${INC} ${SRC})
+add_library( ${MODULE_NAME} SHARED ${INC} ${SRC})
 
 target_link_libraries( ${MODULE_NAME} ${OpenCV_LIBS} cuda_region_grow)
 

@@ -8,9 +8,6 @@
 using namespace std;
 using namespace cv;
 
-/**
- * Constructor sets default values to colorThreshold and whiteThreshold
- */
 grow::grow(double colorThreshold) : colorThreshold(colorThreshold) {
     init_cuda();
 }
@@ -18,40 +15,44 @@ grow::grow(double colorThreshold) : colorThreshold(colorThreshold) {
 /**
  * Function to modify pixel values at a point as per seed pixel
  */
-void grow::modifyPixel(Mat &input, int x, int y, int colorflag) {
+void grow::modifyPixel(Mat &input, int x, int y, Color color) {
     Vec3b &colorC = input.at<Vec3b>(x, y);
 
-    //Yellow Pixel
-    if (colorflag == 2) {
-        colorC[0] = 0;
-        colorC[1] = 255;
-        colorC[2] = 255;
-    }
-
-    //Green Pixel
-    if (colorflag == 3) {
-        colorC[0] = 0;
-        colorC[1] = 255;
-        colorC[2] = 0;
-    }
-
-    //Red Pixel
-    if (colorflag == 4) {
-        colorC[0] = 0;
-        colorC[1] = 0;
-        colorC[2] = 255;
+    switch (color){
+        case RED:
+            colorC[0] = 0;
+            colorC[1] = 0;
+            colorC[2] = 255;
+            break;
+        case GREEN:
+            colorC[0] = 0;
+            colorC[1] = 255;
+            colorC[2] = 0;
+            break;
+        case YELLOW:
+            colorC[0] = 0;
+            colorC[1] = 255;
+            colorC[2] = 255;
+            break;
+        case BLACK:
+            colorC[0] = 0;
+            colorC[1] = 0;
+            colorC[2] = 0;
+            break;
+        case WHITE:
+            colorC[0] = 255;
+            colorC[1] = 255;
+            colorC[2] = 255;
+            break;
+        default:
+            break;
     }
 }
 
-/**
- * Region Growing algorithm, which is flood type algorithm
- * filled -> output image with filled buoys
- * edgeMap -> output image with only edges of final blobs
- * sX --> Seed Pixel x value
- * sY --> Seed Pixel y value
- * colorflag --> to determine the color to be filled with
- */
-void grow::start_grow(Mat input, Mat filled, Mat edgeMap, int row_index, int col_index, int colorflag) {
+void grow::start_grow(Mat input, Mat filled, Mat edgeMap, int row_index, int col_index, Color color) {
+    // call cuda to compute all the color distance between every point and seed point.
+    // the color distance between input(i,j) and seed point(input(row_index,col_index)
+    // is stored in distances(i,j).
     compute_distance(input, row_index, col_index, distances);
 
     int x, y;
@@ -64,7 +65,7 @@ void grow::start_grow(Mat input, Mat filled, Mat edgeMap, int row_index, int col
 
     reach[row_index][col_index] = true;
 
-    modifyPixel(filled, row_index, col_index, colorflag);
+    modifyPixel(filled, row_index, col_index, color);
 
     queue.emplace_back(make_pair(row_index, col_index));
 
@@ -72,10 +73,10 @@ void grow::start_grow(Mat input, Mat filled, Mat edgeMap, int row_index, int col
         if (colorDistance(lx, ly)) {
             reach[lx][ly] = true;
             queue.emplace_back(make_pair(lx, ly));
-            modifyPixel(filled, lx, ly, colorflag);
+            modifyPixel(filled, lx, ly, color);
             ++count;
         } else
-            modifyPixel(edgeMap, lx, ly, colorflag);
+            modifyPixel(edgeMap, lx, ly, color);
     };
 
     while (!queue.empty()) {

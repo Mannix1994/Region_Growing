@@ -27,9 +27,25 @@ using namespace cv;
 
 class grow {
 public:
-    explicit grow(double colorThreshold = 12);
+    typedef enum Color{RED,GREEN,YELLOW,BLACK,WHITE} Color;
 
-    void start_grow(Mat input, Mat filled, Mat edgeMap, int row_index, int col_index, int colorflag);
+    /**
+     * Constructor sets default values to colorThreshold
+     * @param colorThreshold if color distance between point(i,j) and seed point
+     * is lower than colorThreshold, the point(i,j) and seed point has "similar"
+     * color.
+     */
+    explicit grow(double colorThreshold = 12);
+    /**
+     * Region Growing algorithm, which is flood type algorithm
+     * @param input
+     * @param filled output image with filled buoys
+     * @param edgeMap output image with only edges of final blobs
+     * @param row_index Seed Pixel row index
+     * @param col_index Seed Pixel col index
+     * @param color to determine the color to be filled with
+     */
+    void start_grow(Mat input, Mat filled, Mat edgeMap, int row_index, int col_index, Color color);
 
 private:
     double colorThreshold;
@@ -39,7 +55,7 @@ private:
         return distances.at<float>(i0, j0) < colorThreshold;
     }
 
-    void modifyPixel(Mat &input, int x, int y, int colorflag);
+    void modifyPixel(Mat &input, int x, int y, Color color);
 };
 
 #endif

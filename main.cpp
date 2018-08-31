@@ -1,6 +1,6 @@
 #include <cstdlib>
 #include <opencv2/opencv.hpp>
-#include "../region_grow/grow.h"
+#include "region_grow/grow.h"
 #include "timer.h"
 
 using namespace std;
@@ -21,16 +21,16 @@ int main(int argc, char const **argv) {
     grow M(12.5);
     timer.rlog("part2");
 
-    M.start_grow(denoise, filled, edgeMap, 267, 108, 2);
+    M.start_grow(denoise, filled, edgeMap, 267, 108, grow::YELLOW);
     timer.rlog("part3");
 
-    M.start_grow(denoise, filled, edgeMap, 91, 468, 2);
+    M.start_grow(denoise, filled, edgeMap, 91, 468, grow::YELLOW);
     timer.rlog("part4");
 
-    M.start_grow(denoise, filled, edgeMap, 50, 173, 2);
+    M.start_grow(denoise, filled, edgeMap, 50, 173, grow::YELLOW);
     timer.rlog("part5");
 
-    M.start_grow(denoise, filled, edgeMap, 247, 422, 4);
+    M.start_grow(denoise, filled, edgeMap, 247, 422, grow::GREEN);
     timer.rlog("part6");
 
 //    imshow("Original Image", denoise);

@@ -91,8 +91,8 @@ __device__ LAB toLAB(uchar3 bgr) {
     return va;
 }
 
-__device__ float deg2Rad(const float deg) {
-    return (deg * (M_PI / 180.0f));
+__device__ __forceinline__ float deg2Rad(const float deg) {
+    return float(deg * (M_PI / 180.0f));
 }
 
 __device__ float cide_distance(uchar3 bgr1, uchar3 bgr2) {

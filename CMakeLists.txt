@@ -6,11 +6,13 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ../run)
 set(OpenCV_DIR "/usr/local/opencv320/share/OpenCV")
 find_package(OpenCV 3 REQUIRED)
 
-file(GLOB INC region_grow/*.hpp *.h)
-file(GLOB SRC region_grow/*.cpp *.cpp)
+add_subdirectory(region_grow)
+
+file(GLOB INC *.h)
+file(GLOB SRC *.cpp)
 
 add_executable( ${PROJECT_NAME} ${INC} ${SRC})
 
-target_link_libraries( ${PROJECT_NAME} ${OpenCV_LIBS} )
+target_link_libraries( ${PROJECT_NAME} ${OpenCV_LIBS} region_grow)
 
 add_definitions(-std=c++11)

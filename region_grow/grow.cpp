@@ -67,7 +67,6 @@ grow::start_grow(const Mat &input, Mat &filled, Mat &edgeMap, int row_index, int
     int x, y;
     long int count = 1;
     String s = "";
-    Vec3b seed = input_sub.at<Vec3b>(row_index, col_index);
     vector<vector<bool> > reach(input_sub.rows, vector<bool>(input_sub.cols, false));
 
     list<pair<int, int> > queue;

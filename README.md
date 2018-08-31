@@ -49,7 +49,7 @@ void fun(){
 ## Region Grow
 Region Grow is a kind of floodfill-like algrithom. It is used to region growing.
 * Branch [master](https://github.com/Mannix1994/Region_Growing/tree/master)
-: Copied from Nightfury18' project [Region_Growing](https://github.com/Nightfury18/Region_Growing),
+: Copied from Nightfury18's project [Region_Growing](https://github.com/Nightfury18/Region_Growing),
 and I reconstructed project and add some example.
 * Branch [single](https://github.com/Mannix1994/Region_Growing/tree/single)
 ： CUDA accelerated Region Grow. Compute color distance with single precision(float).

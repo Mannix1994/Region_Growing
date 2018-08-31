@@ -1,23 +1,27 @@
-#include <cstdlib>
 #include <opencv2/opencv.hpp>
-#include <opencv2/highgui/highgui.hpp>
 #include <string>
-#include <sstream>
 #include <list>
-#include <bits/stdc++.h>
 #include "Color.hpp"
 #include "grow.h"
 
 using namespace std;
 using namespace cv;
 
-/*
-        Function to determine the color difference between two pixel points.
-        This function also calculates the color distance between white pixel
-        and input pixel to deal overexposed regions of buoy.
-        This function implements CIEDE2000 algorithm to find the distance in color
+/**
+ * Constructor sets default values to colorThreshold and whiteThreshold
  */
-bool colorDistance(const Vec3b a, const Vec3b b, const int colorThreshold, const int whiteThreshold)
+grow::grow(double colorThreshold) : colorThreshold(colorThreshold)
+{
+
+}
+
+/**
+ * Function to determine the color difference between two pixel points.
+ * This function also calculates the color distance between white pixel
+ * and input pixel to deal overexposed regions of buoy.
+ * This function implements CIEDE2000 algorithm to find the distance in color
+ */
+bool grow::colorDistance(const Vec3b& a, const Vec3b& b, int colorThreshold)
 {
     std::vector<double> ca, cb, cw(3, 255);
 
@@ -29,64 +33,49 @@ bool colorDistance(const Vec3b a, const Vec3b b, const int colorThreshold, const
     cb.push_back((double) b[1]);
     cb.push_back((double) b[0]);
 
-    float dist1 = kallaballa::ciede2000_distance(ca, cb);
-    float dist2 = kallaballa::ciede2000_distance(cb, cw);
+    float dist1 = (float)kallaballa::ciede2000_distance(ca, cb);
 
-    if ((int) dist1 <= colorThreshold || (int) dist2 <= whiteThreshold)
-        return true;
-    else
-        return false;
+    return dist1 <= colorThreshold;
 }
 
-/*
-        Function to modify pixel values at a point as per seed pixel
+/**
+ * Function to modify pixel values at a point as per seed pixel
  */
-void modifyPixel(Mat input, const int x, const int y, const int colorflag)
-{
-    Vec3b &colorC = input.at<Vec3b>(x, y);
+void grow::modifyPixel(Mat &input, int row, int col, Color color) {
+    Vec3b &colorC = input.at<Vec3b>(row, col);
 
-    //Yellow Pixel
-    if (colorflag == 2)
-    {
-        colorC[0] = 0;
-        colorC[1] = 255;
-        colorC[2] = 255;
-    }
-
-    //Green Pixel
-    if (colorflag == 3)
-    {
-        colorC[0] = 0;
-        colorC[1] = 255;
-        colorC[2] = 0;
-    }
-
-    //Red Pixel
-    if (colorflag == 4)
-    {
-        colorC[0] = 0;
-        colorC[1] = 0;
-        colorC[2] = 255;
+    switch (color){
+        case RED:
+            colorC[0] = 0;
+            colorC[1] = 0;
+            colorC[2] = 255;
+            break;
+        case GREEN:
+            colorC[0] = 0;
+            colorC[1] = 255;
+            colorC[2] = 0;
+            break;
+        case YELLOW:
+            colorC[0] = 0;
+            colorC[1] = 255;
+            colorC[2] = 255;
+            break;
+        case BLACK:
+            colorC[0] = 0;
+            colorC[1] = 0;
+            colorC[2] = 0;
+            break;
+        case WHITE:
+            colorC[0] = 255;
+            colorC[1] = 255;
+            colorC[2] = 255;
+            break;
+        default:
+            break;
     }
 }
 
-/*
-        Constructor sets default values to colorThreshold and whiteThreshold
- */
-grow::grow(int colorThreshold, int whiteThreshold) : colorThreshold(colorThreshold), whiteThreshold(whiteThreshold)
-{
-
-}
-
-/*
-        Region Growing algorithm, which is flood type algorithm
-        filled -> output image with filled buoys
-        edgeMap -> output image with only edges of final blobs
-        sX --> Seed Pixel x value
-        sY --> Seed Pixel y value
-        colorflag --> to determine the color to be filled with
- */
-void grow::start_grow(Mat input, Mat filled, Mat edgeMap, const int sX, const int sY, const int colorflag)
+void grow::start_grow(Mat input, Mat filled, Mat edgeMap, int sX, int sY, Color color)
 {
     int x, y;
     long int count = 1;
@@ -98,21 +87,21 @@ void grow::start_grow(Mat input, Mat filled, Mat edgeMap, const int sX, const in
 
     reach[sX][sY] = true;
 
-    modifyPixel(filled, sX, sY, colorflag);
+    modifyPixel(filled, sX, sY, color);
 
-    queue.push_back(make_pair(sX, sY));
+    queue.emplace_back(make_pair(sX, sY));
 
     auto helper_lambda = [&](int lx, int ly)
         {
-            if (colorDistance(seed, input.at<Vec3b>(lx , ly), colorThreshold, whiteThreshold))
+            if (colorDistance(seed, input.at<Vec3b>(lx , ly), colorThreshold))
             {
                 reach[lx][ly] = true;
-                queue.push_back(make_pair(lx, ly));
-                modifyPixel(filled, lx, ly, colorflag);
+                queue.emplace_back(make_pair(lx, ly));
+                modifyPixel(filled, lx, ly, color);
                 ++count;
             }
             else
-                modifyPixel(edgeMap, lx, ly, colorflag);
+                modifyPixel(edgeMap, lx, ly, color);
         };
 
     while (!queue.empty())
@@ -153,13 +142,4 @@ void grow::start_grow(Mat input, Mat filled, Mat edgeMap, const int sX, const in
         if (x - 1 >= 0 && y - 1 >= 0 && (!reach[x - 1][y - 1]))
             helper_lambda(x - 1, y - 1);
     }
-}
-
-/*
-        Funtion to set both the thresholds  
- */
-void grow::setThresholds(const int colorThreshold, const int whiteThreshold)
-{
-    this->colorThreshold = colorThreshold;
-    this->whiteThreshold = whiteThreshold;
 }

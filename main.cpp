@@ -1,6 +1,4 @@
-#include <cstdlib>
 #include <opencv2/opencv.hpp>
-#include <chrono>
 #include "region_grow/grow.h"
 #include "timer.h"
 
@@ -20,20 +18,19 @@ int main(int argc, char const **argv) {
     Mat edgeMap(denoise.rows, denoise.cols, CV_8UC3, Scalar(0, 0, 0));
     Mat filled(denoise.rows, denoise.cols, CV_8UC3, Scalar(0, 0, 0));
 
-    grow M;
-    M.setThresholds(12, 15);
+    grow M(12);
     timer.rlog("part2");
 
-    M.start_grow(denoise, filled, edgeMap, 267, 108, 2);
+    M.start_grow(denoise, filled, edgeMap, 267, 108, grow::YELLOW);
     timer.rlog("part3");
 
-    M.start_grow(denoise, filled, edgeMap, 91, 468, 2);
+    M.start_grow(denoise, filled, edgeMap, 91, 468, grow::YELLOW);
     timer.rlog("part4");
 
-    M.start_grow(denoise, filled, edgeMap, 50, 173, 2);
+    M.start_grow(denoise, filled, edgeMap, 50, 173, grow::YELLOW);
     timer.rlog("part5");
 
-    M.start_grow(denoise, filled, edgeMap, 247, 422, 4);
+    M.start_grow(denoise, filled, edgeMap, 247, 422, grow::RED);
     timer.rlog("part6");
 
 //    imshow("Original Image", denoise);

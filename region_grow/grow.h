@@ -27,7 +27,7 @@ using namespace cv;
 
 class grow {
 public:
-    typedef enum Color{RED,GREEN,YELLOW,BLACK,WHITE} Color;
+    typedef enum {RED,GREEN,YELLOW,BLACK,WHITE} Color;
 
     /**
      * Constructor sets default values to colorThreshold

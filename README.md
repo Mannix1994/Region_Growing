@@ -21,7 +21,7 @@ target_link_libraries( ${PROJECT_NAME} ${OpenCV_LIBS}
                         region_grow  #添加region_grow
 )
 ```
-可参考本项目的CMakeLists.txt。
+可参考本项目的CMakeLists.txt。  
 4. 代码示例
 ```
 #include ...

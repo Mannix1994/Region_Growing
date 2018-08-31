@@ -70,7 +70,7 @@ target_link_libraries( ${PROJECT_NAME} ${OpenCV_LIBS}
 )
 ```
 CMakeLists.txt has complete example.
-4. code example
+4. code example  
 ```
 #include ...
 #include "region_grow/grow.h"

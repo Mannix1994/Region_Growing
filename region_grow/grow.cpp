@@ -3,7 +3,7 @@
 #include <string>
 #include <list>
 #include "grow.h"
-#include "../cuda/cide.h"
+#include "cuda/cide.h"
 
 using namespace std;
 using namespace cv;

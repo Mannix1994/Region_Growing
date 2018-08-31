@@ -16,23 +16,30 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+#ifndef GROW_H
+#define GROW_H
 
-#ifndef COLOR_HPP_
-#define COLOR_HPP_
+#include <opencv2/opencv.hpp>
+#include <string>
 
-#include <cstddef>
-#include <cstdint>
-#include <vector>
+using namespace std;
+using namespace cv;
 
-namespace kallaballa
-{
-  typedef uint32_t RGBColor;
+class grow {
+public:
+    explicit grow(double colorThreshold = 12);
 
-  //std::vector<size_t> unpack(RGBColor c);
-  std::vector<double> toXYC(std::vector<double> c);
-  std::vector<double> toLAB(std::vector<double> c);
-  double ciede2000_distance(std::vector<double> a, std::vector<double> b);
-}
+    void start_grow(Mat input, Mat filled, Mat edgeMap, int row_index, int col_index, int colorflag);
 
-/* namespace kallaballa */
-#endif /* COLOR_HPP_ */
+private:
+    double colorThreshold;
+    Mat distances;
+
+    inline bool colorDistance(int i0, int j0){
+        return distances.at<float>(i0, j0) < colorThreshold;
+    }
+
+    void modifyPixel(Mat &input, int x, int y, int colorflag);
+};
+
+#endif

@@ -1,8 +1,8 @@
 
-set(MODULE_NAME cuda_impl)
+set(MODULE_NAME cuda_region_grow)
 
-set(CU_INC cide.h common.h)
-set(CU_SRC cide.cpp cide.cu)
+set(CU_INC cide.h common.h ../grow.h)
+set(CU_SRC cide.cpp cide.cu ../grow.cpp)
 
 set(CUDA_USE_STATIC_CUDA_RUNTIME OFF)
 find_package(CUDA 8 REQUIRED)

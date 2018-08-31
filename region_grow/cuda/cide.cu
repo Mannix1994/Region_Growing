@@ -249,7 +249,10 @@ uint get_best_block_size(){
 
 void compute_distance(const cv::Mat &src,int row_index,int col_index, cv::Mat &dst) {
     cv::cuda::GpuMat g_src;
-    cv::cuda::GpuMat g_dst(src.size(), CV_32FC1);
+    static cv::cuda::GpuMat g_dst(src.size(), CV_32FC1);
+    if(g_dst.size() != src.size()){
+        g_dst.create(src.size(),CV_32FC1);
+    }
     g_src.upload(src);
 
     // get the best block size

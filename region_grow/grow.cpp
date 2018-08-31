@@ -75,7 +75,7 @@ void grow::modifyPixel(Mat &input, int row, int col, Color color) {
     }
 }
 
-void grow::start_grow(Mat input, Mat filled, Mat edgeMap, int sX, int sY, Color color)
+void grow::start_grow(const Mat& input, Mat& filled, Mat& edgeMap, int sX, int sY, Color color)
 {
     int x, y;
     long int count = 1;

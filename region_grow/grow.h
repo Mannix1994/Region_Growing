@@ -48,7 +48,7 @@ public:
      * @param col_index Seed Pixel col index
      * @param color to determine the color to be filled with
      */
-    void start_grow(Mat input, Mat filled, Mat edgeMap, int row_index, int col_index, Color color);
+    void start_grow(const Mat& input, Mat &filled, Mat &edgeMap, int row_index, int col_index, Color color);
 
 private:
     double colorThreshold;

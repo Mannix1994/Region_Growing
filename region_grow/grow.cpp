@@ -48,7 +48,7 @@ void grow::modifyPixel(Mat &input, int x, int y, Color color) {
     }
 }
 
-void grow::start_grow(Mat input, Mat filled, Mat edgeMap, int row_index, int col_index, Color color) {
+void grow::start_grow(const Mat& input, Mat& filled, Mat& edgeMap, int row_index, int col_index, Color color) {
     // call cuda to compute all the color distance between every point and seed point.
     // the color distance between input(i,j) and seed point(input(row_index,col_index)
     // is stored in distances(i,j).

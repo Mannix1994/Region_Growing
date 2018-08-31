@@ -21,7 +21,7 @@ int main(int argc, char const **argv) {
     grow M(12.5);
     timer.rlog("part2");
 
-    M.start_grow(denoise, filled, edgeMap, 267, 108, grow::YELLOW);
+    M.start_grow(denoise, filled, edgeMap, 267, 108, grow::YELLOW, Size(200,200));
     timer.rlog("part3");
 
     M.start_grow(denoise, filled, edgeMap, 91, 468, grow::YELLOW);

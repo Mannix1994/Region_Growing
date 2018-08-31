@@ -23,7 +23,7 @@
 #include <string>
 
 using namespace std;
-using namespace cv;
+//using namespace cv;
 
 class grow {
 public:
@@ -41,18 +41,22 @@ public:
 
     /**
      * Region Growing algorithm, which is flood type algorithm
-     * @param input
-     * @param filled output image with filled buoys
-     * @param edgeMap output image with only edges of final blobs
+     * @param input_sub
+     * @param filled_sub output image with filled buoys
+     * @param edgeMap_sub output image with only edges of final blobs
      * @param row_index Seed Pixel row index
      * @param col_index Seed Pixel col index
      * @param color to determine the color to be filled with
      */
-    void start_grow(const Mat& input, Mat& filled, Mat& edgeMap, int row_index, int col_index, Color color);
+    void start_grow(const cv::Mat& input, cv::Mat& filled, cv::Mat& edgeMap,
+            int row_index, int col_index, Color color,cv::Size size=cv::Size(100,100));
+
+    static cv::Mat get_sub_region(const cv::Mat &input, int row_index, int col_index,
+                                  cv::Point &p,cv::Size size = cv::Size(100, 100));
 
 private:
     double colorThreshold;
-    Mat distances;
+    cv::Mat distances;
 
     /**
      * return if the color distance dist between pixel(i0,j0) and seed pixel is smaller than colorThreshold
@@ -71,7 +75,7 @@ private:
      * @param col pixel's col index
      * @param color the Color you want to change pixel to
      */
-    void modifyPixel(Mat &input, int x, int y, Color color);
+    void modifyPixel(cv::Mat &input, int row_index, int col_index, Color color);
 };
 
 #endif

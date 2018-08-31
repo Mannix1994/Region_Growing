@@ -240,12 +240,27 @@ __global__ void kernel_compute_distance(cv::cuda::PtrStepSz<uchar3> src,int row_
     out(i, j) = cide_distance(bgr1,bgr2);
 }
 
+uint get_best_block_size(){
+    cudaDeviceProp deviceProp;
+    cudaGetDeviceProperties(&deviceProp, 0);
+    int count = deviceProp.maxThreadsPerBlock;
+    return  (uint)sqrt(count);
+}
+
 void compute_distance(const cv::Mat &src,int row_index,int col_index, cv::Mat &dst) {
     cv::cuda::GpuMat g_src;
     cv::cuda::GpuMat g_dst(src.size(), CV_32FC1);
     g_src.upload(src);
 
-    dim3 block(32, 32);
+    // get the best block size
+    static uint block_size = get_best_block_size();
+
+    // if you don't know anything about cuda programming, just skip this comment
+    // you should choose the block_size manually, make sure call all
+    // threads in a block to compute.
+    // for example, my display card's maxThreadsPerBlock is 1024,so I should set
+    // dim3 block(32, 32),because 32*32=1024.
+    dim3 block(block_size, block_size);
     dim3 grid((src.rows + block.y - 1) / block.y, (src.cols + block.x - 1) / block.x);
     kernel_compute_distance<<< grid, block, 0 >>>(g_src, row_index,col_index,g_dst);
 

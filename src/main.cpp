@@ -1,6 +1,6 @@
 #include <cstdlib>
 #include <opencv2/opencv.hpp>
-#include "../region_growing/grow.h"
+#include "../region_grow/grow.h"
 #include "timer.h"
 
 using namespace std;

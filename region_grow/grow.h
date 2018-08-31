@@ -27,7 +27,9 @@ using namespace cv;
 
 class grow {
 public:
-    typedef enum {RED,GREEN,YELLOW,BLACK,WHITE} Color;
+    typedef enum {
+        RED, GREEN, YELLOW, BLACK, WHITE
+    } Color;
 
     /**
      * Constructor sets default values to colorThreshold
@@ -36,6 +38,7 @@ public:
      * color.
      */
     explicit grow(double colorThreshold = 12);
+
     /**
      * Region Growing algorithm, which is flood type algorithm
      * @param input
@@ -57,7 +60,7 @@ private:
      * @param j0 pixel's col index
      * @return return true if dist<colorThreshold
      */
-    inline bool colorDistance(int i0, int j0){
+    inline bool colorDistance(int i0, int j0) {
         return distances.at<float>(i0, j0) < colorThreshold;
     }
 

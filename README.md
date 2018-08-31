@@ -58,7 +58,9 @@ sudo apt-get install build-essential cmake git libgtk2.0-dev pkg-config libavcod
 * 进入到OpenCV源文件的根目录中
 ```
 mkdir release
+
 cd release
+
 cmake -D CMAKE_BUILD_TYPE=RELEASE \
 	-D CMAKE_INSTALL_PREFIX=/usr/local/opencv320 \
 	-D OPENCV_EXTRA_MODULES_PATH=../opencv_contrib-3.2.0/modules \
@@ -74,8 +76,10 @@ cmake -D CMAKE_BUILD_TYPE=RELEASE \
 	-D WITH_TBB=ON \
 	-D WITH_OPENMP=ON \
 	-D WITH_OPENGL=ON ..
+	
 # 没有错误时
 make -j 12 # 12要替换成你的CPU的核心数量
+
 sudo make install
 ```
 
@@ -83,7 +87,7 @@ sudo make install
 ## Region Grow
 Region Grow is a kind of floodfill-like algorithm. It is used to region growing.
 * Branch [master](https://github.com/Mannix1994/Region_Growing/tree/master)
-: Copied from Nightfury18' project [Region_Growing](https://github.com/Nightfury18/Region_Growing),
+: Copied from Nightfury18's project [Region_Growing](https://github.com/Nightfury18/Region_Growing),
 and I reconstructed project and add some example.
 * Branch [single](https://github.com/Mannix1994/Region_Growing/tree/single)
 ： CUDA accelerated Region Grow. Compute color distance with single precision(float).
@@ -103,7 +107,7 @@ target_link_libraries( ${PROJECT_NAME} ${OpenCV_LIBS}
                         region_grow  #add region_grow
 )
 ```
-CMakeLists.txt has complete example.
+CMakeLists.txt has complete example.  
 4. code example
 ```
 #include ...

@@ -58,7 +58,7 @@ grow::start_grow(const Mat &input, Mat &filled, Mat &edgeMap, int row_index, int
     Mat edgeMap_sub = get_sub_region(edgeMap, row_index, col_index, p, size);
 
     row_index = p.y;
-    col_index = p.y;
+    col_index = p.x;
     // call cuda to compute all the color distance between every point and seed point.
     // the color distance between input(i,j) and seed point(input(row_index,col_index)
     // is stored in distances(i,j).

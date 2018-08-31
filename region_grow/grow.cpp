@@ -9,7 +9,6 @@ using namespace std;
 using namespace cv;
 
 grow::grow(double colorThreshold) : colorThreshold(colorThreshold) {
-    init_cuda();
 }
 
 /**

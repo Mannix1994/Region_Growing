@@ -81,7 +81,7 @@ sudo make install
 
 # English Document
 ## Region Grow
-Region Grow is a kind of floodfill-like algrithom. It is used to region growing.
+Region Grow is a kind of floodfill-like algorithm. It is used to region growing.
 * Branch [master](https://github.com/Mannix1994/Region_Growing/tree/master)
 : Copied from Nightfury18' project [Region_Growing](https://github.com/Nightfury18/Region_Growing),
 and I reconstructed project and add some example.
@@ -141,7 +141,9 @@ sudo apt-get install build-essential cmake git libgtk2.0-dev pkg-config libavcod
 * Enter root directory of OpenCV source code.
 ```
 mkdir release
+
 cd release
+
 cmake -D CMAKE_BUILD_TYPE=RELEASE \
 	-D CMAKE_INSTALL_PREFIX=/usr/local/opencv320 \
 	-D OPENCV_EXTRA_MODULES_PATH=../opencv_contrib-3.2.0/modules \
@@ -157,7 +159,9 @@ cmake -D CMAKE_BUILD_TYPE=RELEASE \
 	-D WITH_TBB=ON \
 	-D WITH_OPENMP=ON \
 	-D WITH_OPENGL=ON ..
+	
 # when there is no error
 make -j 12 # replace 12 with the number of your CPU cores
+
 sudo make install
 ```

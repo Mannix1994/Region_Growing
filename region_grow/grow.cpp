@@ -53,9 +53,9 @@ void grow::modifyPixel(Mat &input, int row_index, int col_index, Color color) {
 void
 grow::start_grow(const Mat &input, Mat &filled, Mat &edgeMap, int row_index, int col_index, Color color, Size size) {
     Point p;
-    Mat input_sub = get_sub_region(input, row_index, col_index, p, size);
-    Mat filled_sub = get_sub_region(filled, row_index, col_index, p, size);
-    Mat edgeMap_sub = get_sub_region(edgeMap, row_index, col_index, p, size);
+    Mat input_sub = get_sub_mat(input, row_index, col_index, p, size);
+    Mat filled_sub = get_sub_mat(filled, row_index, col_index, p, size);
+    Mat edgeMap_sub = get_sub_mat(edgeMap, row_index, col_index, p, size);
 
     row_index = p.y;
     col_index = p.x;
@@ -126,7 +126,7 @@ grow::start_grow(const Mat &input, Mat &filled, Mat &edgeMap, int row_index, int
     }
 }
 
-cv::Mat grow::get_sub_region(const cv::Mat &input, int row_index, int col_index, Point &p, Size size) {
+cv::Mat grow::get_sub_mat(const cv::Mat &input, int row_index, int col_index, Point &point, Size size) {
     if (row_index < 0 || row_index >= input.rows || col_index < 0 || col_index >= input.cols) {
         throw runtime_error("row index or cols index is out of input");
     }
@@ -146,8 +146,8 @@ cv::Mat grow::get_sub_region(const cv::Mat &input, int row_index, int col_index,
                   (size.height + diff_y) :
                   (size.height + diff_y - (row_index + size.height/2 - input.rows) - 1);
     //compute point
-    p.x = col_index - rect.x;
-    p.y = row_index - rect.y;
+    point.x = col_index - rect.x;
+    point.y = row_index - rect.y;
 
     return input(rect);
 }

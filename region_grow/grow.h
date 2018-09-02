@@ -51,8 +51,17 @@ public:
     void start_grow(const cv::Mat& input, cv::Mat& filled, cv::Mat& edgeMap,
             int row_index, int col_index, Color color,cv::Size size=cv::Size(100,100));
 
-    static cv::Mat get_sub_region(const cv::Mat &input, int row_index, int col_index,
-                                  cv::Point &p,cv::Size size = cv::Size(100, 100));
+    /**
+     * get the sub Mat, whose center point is (row_index,col_index), of input.
+     * @param input input Mat
+     * @param row_index the row index of center point
+     * @param col_index the cols index of center point
+     * @param point the location of (row_index,col_index) in sub Mat
+     * @param size region size
+     * @return a sub Mat
+     */
+    static cv::Mat get_sub_mat(const cv::Mat &input, int row_index, int col_index,
+                               cv::Point &point, cv::Size size = cv::Size(100, 100));
 
 private:
     double colorThreshold;

@@ -130,6 +130,9 @@ cv::Mat grow::get_sub_region(const cv::Mat &input, int row_index, int col_index,
     if (row_index < 0 || row_index >= input.rows || col_index < 0 || col_index >= input.cols) {
         throw runtime_error("row index or cols index is out of input");
     }
+    if (size.width % 2 != 0 || size.height % 2 != 0) {
+        throw runtime_error("size.width and size.height should be even numbers");
+    }
     // compute rect
     Rect rect;
     rect.x = (col_index - size.width / 2) > 0 ? (col_index - size.width / 2) : 0;

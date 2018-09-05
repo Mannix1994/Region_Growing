@@ -13,6 +13,8 @@ int main(int argc, char const **argv) {
     src = imread(argv[1], CV_LOAD_IMAGE_COLOR);
     fastNlMeansDenoisingColored(src, denoise, 2);
     medianBlur(denoise, denoise, 3);
+    cuda::setDevice(0);
+    cuda::GpuMat g_denoise = grow::BGR2Lab(denoise);
     timer.rlog("part1");
 
     Mat edgeMap(denoise.rows, denoise.cols, CV_8UC3, Scalar(0, 0, 0));
@@ -21,16 +23,16 @@ int main(int argc, char const **argv) {
     grow M(12.5);
     timer.rlog("part2");
 
-    M.start_grow(denoise, filled, edgeMap, 267, 108, grow::YELLOW, Size(200,200));
+    M.start_grow(g_denoise, filled, edgeMap, 267, 108, grow::YELLOW, Size(200,200));
     timer.rlog("part3");
 
-    M.start_grow(denoise, filled, edgeMap, 91, 468, grow::GREEN);
+    M.start_grow(g_denoise, filled, edgeMap, 91, 468, grow::GREEN);
     timer.rlog("part4");
 
-    M.start_grow(denoise, filled, edgeMap, 50, 173, grow::RED);
+    M.start_grow(g_denoise, filled, edgeMap, 50, 173, grow::RED);
     timer.rlog("part5");
 
-    M.start_grow(denoise, filled, edgeMap, 247, 422, grow::WHITE);
+    M.start_grow(g_denoise, filled, edgeMap, 247, 422, grow::WHITE);
     timer.rlog("part6");
 
 //    imshow("Original Image", denoise);

@@ -5,12 +5,13 @@
 #include "grow.h"
 #include "cuda/cide.h"
 #include <stdexcept>
+#include "../timer.h"
 
 using namespace std;
 using namespace cv;
 
 grow::grow(double colorThreshold) : colorThreshold(colorThreshold) {
-    init_cuda();
+//    init_cuda();
 }
 
 /**
@@ -50,19 +51,21 @@ void grow::modifyPixel(Mat &input, int row_index, int col_index, Color color) {
     }
 }
 
-void
-grow::start_grow(const Mat &input, Mat &filled, Mat &edgeMap, int row_index, int col_index, Color color, Size size) {
+void grow::start_grow(const cuda::GpuMat &input, Mat &filled, Mat &edgeMap, int row_index, int col_index, Color color, Size size) {
     Point p;
-    Mat input_sub = get_sub_mat(input, row_index, col_index, p, size);
-    Mat filled_sub = get_sub_mat(filled, row_index, col_index, p, size);
-    Mat edgeMap_sub = get_sub_mat(edgeMap, row_index, col_index, p, size);
+    Rect ROI = get_sub_rect(filled.size(), row_index, col_index, p, size);
+    cuda::GpuMat input_sub = input(ROI);
+    Mat filled_sub = filled(ROI);
+    Mat edgeMap_sub = edgeMap(ROI);
 
     row_index = p.y;
     col_index = p.x;
     // call cuda to compute all the color distance between every point and seed point.
     // the color distance between input(i,j) and seed point(input(row_index,col_index)
     // is stored in distances(i,j).
+    Timer timer;
     compute_distance(input_sub, row_index, col_index, distances);
+    timer.rlog("compute_distance");
 
     int x, y;
     long int count = 1;
@@ -126,8 +129,8 @@ grow::start_grow(const Mat &input, Mat &filled, Mat &edgeMap, int row_index, int
     }
 }
 
-cv::Mat grow::get_sub_mat(const cv::Mat &input, int row_index, int col_index, Point &point, Size size) {
-    if (row_index < 0 || row_index >= input.rows || col_index < 0 || col_index >= input.cols) {
+cv::Rect grow::get_sub_rect(const cv::Size &src_size, int row_index, int col_index, Point &point, Size size) {
+    if (row_index < 0 || row_index >= src_size.height || col_index < 0 || col_index >= src_size.width) {
         throw runtime_error("row index or cols index is out of input");
     }
     if (size.width % 2 != 0 || size.height % 2 != 0) {
@@ -139,15 +142,21 @@ cv::Mat grow::get_sub_mat(const cv::Mat &input, int row_index, int col_index, Po
     rect.y = (row_index - size.height / 2) > 0 ? (row_index - size.height / 2) : 0;
     int diff_x = (col_index-rect.x)-size.width / 2;
     int diff_y = (row_index-rect.y)-size.height / 2;
-    rect.width = (col_index + size.width/2) < input.cols ?
+    rect.width = (col_index + size.width/2) < src_size.width ?
                  (size.width + diff_x) :
-                 (size.width + diff_x - (col_index + size.width/2 - input.cols) - 1);
-    rect.height = (row_index + size.height/2) < input.rows ?
+                 (size.width + diff_x - (col_index + size.width/2 - src_size.width) - 1);
+    rect.height = (row_index + size.height/2) < src_size.height ?
                   (size.height + diff_y) :
-                  (size.height + diff_y - (row_index + size.height/2 - input.rows) - 1);
+                  (size.height + diff_y - (row_index + size.height/2 - src_size.height) - 1);
     //compute point
     point.x = col_index - rect.x;
     point.y = row_index - rect.y;
 
-    return input(rect);
+    return rect;
+}
+
+cv::cuda::GpuMat grow::BGR2Lab(const cv::Mat &bgr) {
+    static cuda::GpuMat lab;
+    bgr2lLab(bgr,lab);
+    return lab;
 }

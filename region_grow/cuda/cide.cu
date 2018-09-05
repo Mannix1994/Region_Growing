@@ -56,7 +56,7 @@ __device__ float3 toXYC(uchar3 bgr) {
  * @param bgr a bgr color
  * @return a lab color
  */
-__device__ LAB toLAB(uchar3 bgr) {
+__device__ float3 toLAB(uchar3 bgr) {
     float3 xyz = toXYC(bgr);
     float lab[3];
     float x = xyz.x / 95.047f; //Observer. = 2°, Illuminant = D65
@@ -84,20 +84,58 @@ __device__ LAB toLAB(uchar3 bgr) {
 
     lab[0] = lab[0] < 0.0 ? 0.0f : lab[0];
 
-    LAB va;
-    va.l = lab[0];//channel L
-    va.a = lab[1];//channel A
-    va.b = lab[2];//channel B
+    float3 va;
+    va.x = lab[0];//channel L
+    va.y = lab[1];//channel A
+    va.z = lab[2];//channel B
     return va;
+}
+
+__global__ void bgr2Lab_kernel(cv::cuda::PtrStepSz<uchar3> bgr, cv::cuda::PtrStepSz<float3> lab)
+{
+    int i = threadIdx.x + blockIdx.x * blockDim.x; //行坐标
+    int j = threadIdx.y + blockIdx.y * blockDim.y; //列坐标
+
+    if (i >= bgr.rows || j >= bgr.cols) {
+        return;
+    }
+    uchar3 bgr_color = bgr(i, j);
+    lab(i,j) = toLAB(bgr_color);
+}
+
+uint get_best_block_size(){
+    cudaDeviceProp deviceProp;
+    cudaGetDeviceProperties(&deviceProp, 0);
+    int count = deviceProp.maxThreadsPerBlock;
+    return  (uint)sqrt(count);
+}
+
+void bgr2lLab(const cv::Mat &bgr, cv::cuda::GpuMat &lab) {
+    cv::cuda::GpuMat g_bgr;
+    if(lab.size() != bgr.size()){
+        lab.release();
+        lab.create(bgr.size(),CV_32FC3);
+    }
+    g_bgr.upload(bgr);
+
+    // get the best block size
+    static uint block_size = get_best_block_size();
+
+    dim3 block(block_size, block_size);
+    dim3 grid((bgr.rows + block.y - 1) / block.y, (bgr.cols + block.x - 1) / block.x);
+    bgr2Lab_kernel <<< grid, block, 0 >>>(g_bgr,lab);
+
+    // wait until compute finished
+    cudaDeviceSynchronize();
 }
 
 __device__ __forceinline__ float deg2Rad(const float deg) {
     return float(deg * (M_PI / 180.0f));
 }
 
-__device__ float cide_distance(uchar3 bgr1, uchar3 bgr2) {
-    LAB lab1 = toLAB(bgr1);
-    LAB lab2 = toLAB(bgr2);
+__device__ float cide_distance(float3 _lab1, float3 _lab2) {
+    LAB lab1 = {_lab1.x,_lab1.y,_lab1.z};
+    LAB lab2 = {_lab2.x,_lab2.y,_lab2.z};
 
     const float k_L = 1.0, k_C = 1.0, k_H = 1.0;
     const float deg360InRad = deg2Rad(360.0);
@@ -227,7 +265,7 @@ __device__ float cide_distance(uchar3 bgr1, uchar3 bgr2) {
  * @param src input image
  * @param out out put result
  */
-__global__ void kernel_compute_distance(cv::cuda::PtrStepSz<uchar3> src,int row_index,int col_index,
+__global__ void kernel_compute_distance(cv::cuda::PtrStepSz<float3> src,int row_index,int col_index,
                                         cv::cuda::PtrStepSz<float> out) {
     int i = threadIdx.x + blockIdx.x * blockDim.x; //行坐标
     int j = threadIdx.y + blockIdx.y * blockDim.y; //列坐标
@@ -235,25 +273,16 @@ __global__ void kernel_compute_distance(cv::cuda::PtrStepSz<uchar3> src,int row_
     if (i >= src.rows || j >= src.cols) {
         return;
     }
-    uchar3 bgr1 = src(row_index, col_index);
-    uchar3 bgr2 = src(i, j);
-    out(i, j) = cide_distance(bgr1,bgr2);
+    float3 lab1 = src(row_index, col_index);
+    float3 lab2 = src(i, j);
+    out(i, j) = cide_distance(lab1,lab2);
 }
 
-uint get_best_block_size(){
-    cudaDeviceProp deviceProp;
-    cudaGetDeviceProperties(&deviceProp, 0);
-    int count = deviceProp.maxThreadsPerBlock;
-    return  (uint)sqrt(count);
-}
-
-void compute_distance(const cv::Mat &src,int row_index,int col_index, cv::Mat &dst) {
-    cv::cuda::GpuMat g_src;
+void compute_distance(const cv::cuda::GpuMat &src,int row_index,int col_index, cv::Mat &dst) {
     static cv::cuda::GpuMat g_dst(src.size(), CV_32FC1);
     if(g_dst.size() != src.size()){
         g_dst.create(src.size(),CV_32FC1);
     }
-    g_src.upload(src);
 
     // get the best block size
     static uint block_size = get_best_block_size();
@@ -265,7 +294,7 @@ void compute_distance(const cv::Mat &src,int row_index,int col_index, cv::Mat &d
     // dim3 block(32, 32),because 32*32=1024.
     dim3 block(block_size, block_size);
     dim3 grid((src.rows + block.y - 1) / block.y, (src.cols + block.x - 1) / block.x);
-    kernel_compute_distance<<< grid, block, 0 >>>(g_src, row_index,col_index,g_dst);
+    kernel_compute_distance<<< grid, block, 0 >>>(src, row_index,col_index,g_dst);
 
     g_dst.download(dst);
 }

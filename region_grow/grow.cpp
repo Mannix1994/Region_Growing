@@ -5,12 +5,13 @@
 #include "grow.h"
 #include "cuda/cide.h"
 #include <stdexcept>
+#include "../timer.h"
 
 using namespace std;
 using namespace cv;
 
 grow::grow(double colorThreshold) : colorThreshold(colorThreshold) {
-    init_cuda();
+//    init_cuda();
 }
 
 /**
@@ -62,7 +63,9 @@ grow::start_grow(const Mat &input, Mat &filled, Mat &edgeMap, int row_index, int
     // call cuda to compute all the color distance between every point and seed point.
     // the color distance between input(i,j) and seed point(input(row_index,col_index)
     // is stored in distances(i,j).
+    Timer timer;
     compute_distance(input_sub, row_index, col_index, distances);
+    timer.rlog("compute_distance");
 
     int x, y;
     long int count = 1;

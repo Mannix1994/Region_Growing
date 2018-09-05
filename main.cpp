@@ -13,6 +13,7 @@ int main(int argc, char const **argv) {
     src = imread(argv[1], CV_LOAD_IMAGE_COLOR);
     fastNlMeansDenoisingColored(src, denoise, 2);
     medianBlur(denoise, denoise, 3);
+    cuda::setDevice(0);
     timer.rlog("part1");
 
     Mat edgeMap(denoise.rows, denoise.cols, CV_8UC3, Scalar(0, 0, 0));

@@ -51,8 +51,12 @@ void grow::modifyPixel(Mat &input, int row_index, int col_index, Color color) {
     }
 }
 
-void
-grow::start_grow(const Mat &input, Mat &filled, Mat &edgeMap, int row_index, int col_index, Color color, Size size) {
+void grow::start_grow(const Mat &input, Mat &filled, Mat &edgeMap, int row_index, int col_index, Color color, Size size) {
+
+    if(input.size() != filled.size() || input.size() != edgeMap.size()){
+        throw std::runtime_error("The sizes of input, filled and edgeMap are not equal with each other");
+    }
+
     Point p;
     Mat input_sub = get_sub_mat(input, row_index, col_index, p, size);
     Mat filled_sub = get_sub_mat(filled, row_index, col_index, p, size);

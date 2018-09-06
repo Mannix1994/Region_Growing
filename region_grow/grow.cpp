@@ -52,6 +52,9 @@ void grow::modifyPixel(Mat &input, int row_index, int col_index, Color color) {
 }
 
 void grow::start_grow(const cuda::GpuMat &input, Mat &filled, Mat &edgeMap, int row_index, int col_index, Color color, Size size) {
+    if(input.size() != filled.size() || input.size() != edgeMap.size()){
+        throw std::runtime_error("The sizes of input, filled and edgeMap are not equal with each other");
+    }
     Point p;
     Rect ROI = get_sub_rect(filled.size(), row_index, col_index, p, size);
     cuda::GpuMat input_sub = input(ROI);

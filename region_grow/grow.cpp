@@ -159,6 +159,7 @@ cv::Rect grow::get_sub_rect(const cv::Size &src_size, int row_index, int col_ind
 }
 
 cv::cuda::GpuMat grow::BGR2Lab(const cv::Mat &bgr) {
+    CV_DbgAssert(!bgr.empty() && "bgr is empty");
     static cuda::GpuMat lab;
     bgr2lLab(bgr,lab);
     return lab;

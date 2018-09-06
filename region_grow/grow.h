@@ -63,6 +63,11 @@ public:
     static cv::Rect get_sub_rect(const cv::Size &src_size, int row_index, int col_index, cv::Point &point
             , cv::Size size = cv::Size(100, 100));
 
+    /**
+     * turn a bgr Mat to a Lab Mat(using cuda)
+     * @param bgr a BGR Mat
+     * @return a Lab Mat
+     */
     static cv::cuda::GpuMat BGR2Lab(const cv::Mat& bgr);
 
 private:

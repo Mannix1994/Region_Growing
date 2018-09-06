@@ -4,6 +4,7 @@
 
 #include "cide.h"
 #include "common.h"
+#include <stdexcept>
 
 #ifndef M_PI
 # define M_PI        3.14159265358979323846f    /* pi */
@@ -127,6 +128,11 @@ void bgr2lLab(const cv::Mat &bgr, cv::cuda::GpuMat &lab) {
 
     // wait until compute finished
     cudaDeviceSynchronize();
+
+    // check if any error happened
+    cudaError_t status = cudaGetLastError();
+    if(status != cudaSuccess)
+        throw std::runtime_error(cudaGetErrorString(status))<<std::endl;
 }
 
 __device__ __forceinline__ float deg2Rad(const float deg) {
@@ -295,6 +301,11 @@ void compute_distance(const cv::cuda::GpuMat &src,int row_index,int col_index, c
     dim3 block(block_size, block_size);
     dim3 grid((src.rows + block.y - 1) / block.y, (src.cols + block.x - 1) / block.x);
     kernel_compute_distance<<< grid, block, 0 >>>(src, row_index,col_index,g_dst);
+
+    // check if any error happened
+    cudaError_t status = cudaGetLastError();
+    if(status != cudaSuccess)
+        throw std::runtime_error(cudaGetErrorString(status))<<std::endl;
 
     g_dst.download(dst);
 }

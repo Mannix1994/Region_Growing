@@ -63,6 +63,9 @@ public:
     static cv::Mat get_sub_mat(const cv::Mat &input, int row_index, int col_index,
                                cv::Point &point, cv::Size size = cv::Size(100, 100));
 
+    static cv::Rect get_sub_rect(const cv::Size &src_size, int row_index, int col_index,
+            cv::Point &point, cv::Size size);
+
 private:
     double colorThreshold;
     cv::Mat distances;

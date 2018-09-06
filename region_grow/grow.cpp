@@ -129,8 +129,12 @@ grow::start_grow(const Mat &input, Mat &filled, Mat &edgeMap, int row_index, int
     }
 }
 
-cv::Mat grow::get_sub_mat(const cv::Mat &input, int row_index, int col_index, Point &point, Size size) {
-    if (row_index < 0 || row_index >= input.rows || col_index < 0 || col_index >= input.cols) {
+cv::Mat grow::get_sub_mat(const cv::Mat &input, int row_index, int col_index, cv::Point &point, Size size) {
+    return input(get_sub_rect(input.size(),row_index,col_index,point,size));
+}
+
+cv::Rect grow::get_sub_rect(const cv::Size &src_size, int row_index, int col_index, Point &point, Size size) {
+    if (row_index < 0 || row_index >= src_size.height || col_index < 0 || col_index >= src_size.width) {
         throw runtime_error("row index or cols index is out of input");
     }
     if (size.width % 2 != 0 || size.height % 2 != 0) {
@@ -142,15 +146,16 @@ cv::Mat grow::get_sub_mat(const cv::Mat &input, int row_index, int col_index, Po
     rect.y = (row_index - size.height / 2) > 0 ? (row_index - size.height / 2) : 0;
     int diff_x = (col_index-rect.x)-size.width / 2;
     int diff_y = (row_index-rect.y)-size.height / 2;
-    rect.width = (col_index + size.width/2) < input.cols ?
+    rect.width = (col_index + size.width/2) < src_size.width ?
                  (size.width + diff_x) :
-                 (size.width + diff_x - (col_index + size.width/2 - input.cols) - 1);
-    rect.height = (row_index + size.height/2) < input.rows ?
+                 (size.width + diff_x - (col_index + size.width/2 - src_size.width) - 1);
+    rect.height = (row_index + size.height/2) < src_size.height ?
                   (size.height + diff_y) :
-                  (size.height + diff_y - (row_index + size.height/2 - input.rows) - 1);
+                  (size.height + diff_y - (row_index + size.height/2 - src_size.height) - 1);
     //compute point
     point.x = col_index - rect.x;
     point.y = row_index - rect.y;
 
-    return input(rect);
+    return rect;
 }
+

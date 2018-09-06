@@ -5,7 +5,7 @@
 #include "grow.h"
 #include "cuda/cide.h"
 #include <stdexcept>
-#include "../timer.h"
+#include "timer.h"
 
 using namespace std;
 using namespace cv;

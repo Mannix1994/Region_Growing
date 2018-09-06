@@ -1,7 +1,7 @@
 #include <cstdlib>
 #include <opencv2/opencv.hpp>
 #include "region_grow/grow.h"
-#include "timer.h"
+#include "region_grow/timer.h"
 
 using namespace std;
 using namespace cv;
@@ -14,6 +14,7 @@ int main(int argc, char const **argv) {
     fastNlMeansDenoisingColored(src, denoise, 2);
     medianBlur(denoise, denoise, 3);
     cuda::setDevice(0);
+    timer.rlog("part0");
     cuda::GpuMat g_denoise = grow::BGR2Lab(denoise);
     timer.rlog("part1");
 

@@ -132,7 +132,7 @@ void bgr2lLab(const cv::Mat &bgr, cv::cuda::GpuMat &lab) {
     // check if any error happened
     cudaError_t status = cudaGetLastError();
     if(status != cudaSuccess)
-        throw std::runtime_error(cudaGetErrorString(status))<<std::endl;
+        throw std::runtime_error(cudaGetErrorString(status));
 }
 
 __device__ __forceinline__ float deg2Rad(const float deg) {
@@ -305,7 +305,7 @@ void compute_distance(const cv::cuda::GpuMat &src,int row_index,int col_index, c
     // check if any error happened
     cudaError_t status = cudaGetLastError();
     if(status != cudaSuccess)
-        throw std::runtime_error(cudaGetErrorString(status))<<std::endl;
+        throw std::runtime_error(cudaGetErrorString(status));
 
     g_dst.download(dst);
 }

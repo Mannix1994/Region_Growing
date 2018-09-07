@@ -272,7 +272,7 @@ void compute_distance(const cv::Mat &src,int row_index,int col_index, cv::Mat &d
     // check if any error happened
     cudaError_t status = cudaGetLastError();
     if(status != cudaSuccess)
-        throw std::runtime_error(cudaGetErrorString(status))<<std::endl;
+        throw std::runtime_error(cudaGetErrorString(status));
 
     g_dst.download(dst);
 }

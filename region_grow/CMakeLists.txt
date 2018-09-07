@@ -6,6 +6,8 @@ include_directories(${OpenCV_INCLUDE_DIRS})
 file(GLOB INC *.h)
 file(GLOB SRC *.cpp)
 
+set(CMAKE_CXX_FLAGS "-std=c++11 -O3")
+
 add_subdirectory(cuda)
 
 add_library( ${MODULE_NAME} SHARED ${INC} ${SRC})

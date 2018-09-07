@@ -6,11 +6,11 @@ set(CU_SRC cide.cpp cide.cu)
 
 set(CUDA_USE_STATIC_CUDA_RUNTIME OFF)
 find_package(CUDA 8 REQUIRED)
-CUDA_SELECT_NVCC_ARCH_FLAGS(code_generation_flags "${CUDA_ARCHITECTURES}")
-list(APPEND CUDA_NVCC_FLAGS ${code_generation_flags})
-message(STATUS "CUDA_NVCC_FLAGS=${code_generation_flags}")
+CUDA_SELECT_NVCC_ARCH_FLAGS(CUDA_NVCC_FLAGS Auto)
+list(APPEND CUDA_NVCC_FLAGS -O2 -std=c++11)
+message(STATUS "CUDA_NVCC_FLAGS=${CUDA_NVCC_FLAGS}")
 
-set(CMAKE_CXX_FLAGS "-std=c++11")
+set(CMAKE_CXX_FLAGS "-std=c++11 -O3")
 
 include_directories(${CUDA_INCLUDE_DIRS})
 

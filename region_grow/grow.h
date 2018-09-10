@@ -52,28 +52,16 @@ public:
             int row_index, int col_index, Color color,cv::Size size=cv::Size(100,100));
 
     /**
-     * get the sub Mat, whose center point is (row_index,col_index), of input.
-     * @param input input Mat
-     * @param row_index the row index of center point
-     * @param col_index the cols index of center point
-     * @param point the location of (row_index,col_index) in sub Mat
-     * @param size region size
-     * @return a sub Mat
-     */
-    static cv::Mat get_sub_mat(const cv::Mat &input, int row_index, int col_index,
-                               cv::Point &point, cv::Size size = cv::Size(100, 100));
-
-    /**
-     * get the sub Rect, whose center point is (row_index,col_index), of src_size
-     * @param src_size input rect size
-     * @param row_index the row index of center point
-     * @param col_index the cols index of center point
-     * @param point point the location of (row_index,col_index) in sub rect
+     * get the sub rect, whose center point is (row_index,col_index), of src_size
+     * @param src_size input size of Mat or rect
+     * @param row the row index of center point
+     * @param col the cols index of center point
+     * @param point point the new location of (row_index,col_index) in sub rect
      * @param size sub rect's size
      * @return a sub rect
      */
-    static cv::Rect get_sub_rect(const cv::Size &src_size, int row_index, int col_index,
-            cv::Point &point, cv::Size size);
+    static cv::Rect get_sub_rect(const cv::Size &src_size, int row, int col,
+            cv::Point &point, cv::Size size=cv::Size(100, 100));
 
 private:
     double colorThreshold;
@@ -96,7 +84,7 @@ private:
      * @param col pixel's col index
      * @param color the Color you want to change pixel to
      */
-    void modifyPixel(cv::Mat &input, int row_index, int col_index, Color color);
+    void modifyPixel(cv::Mat &input, int row, int col, Color color);
 };
 
 #endif

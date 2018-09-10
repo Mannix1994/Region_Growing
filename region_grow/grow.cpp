@@ -55,8 +55,12 @@ void grow::start_grow(const cuda::GpuMat &input, Mat &filled, Mat &edgeMap, int 
     if(input.size() != filled.size() || input.size() != edgeMap.size()){
         throw std::runtime_error("The sizes of input, filled and edgeMap are not equal with each other");
     }
+    if(size == Size(0,0))
+        size = input.size();
+
     Point p;
     Rect ROI = get_sub_rect(filled.size(), row_index, col_index, p, size);
+
     cuda::GpuMat input_sub = input(ROI);
     Mat filled_sub = filled(ROI);
     Mat edgeMap_sub = edgeMap(ROI);
@@ -132,28 +136,35 @@ void grow::start_grow(const cuda::GpuMat &input, Mat &filled, Mat &edgeMap, int 
     }
 }
 
-cv::Rect grow::get_sub_rect(const cv::Size &src_size, int row_index, int col_index, Point &point, Size size) {
-    if (row_index < 0 || row_index >= src_size.height || col_index < 0 || col_index >= src_size.width) {
+cv::Rect grow::get_sub_rect(const cv::Size &src_size, int row, int col, Point &point, Size size) {
+    if (row < 0 || row >= src_size.height || col < 0 || col >= src_size.width) {
         throw runtime_error("row index or cols index is out of input");
     }
     if (size.width % 2 != 0 || size.height % 2 != 0) {
         throw runtime_error("size.width and size.height should be even numbers");
     }
-    // compute rect
+
+    // compute rect's x and y
     Rect rect;
-    rect.x = (col_index - size.width / 2) > 0 ? (col_index - size.width / 2) : 0;
-    rect.y = (row_index - size.height / 2) > 0 ? (row_index - size.height / 2) : 0;
-    int diff_x = (col_index-rect.x)-size.width / 2;
-    int diff_y = (row_index-rect.y)-size.height / 2;
-    rect.width = (col_index + size.width/2) < src_size.width ?
-                 (size.width + diff_x) :
-                 (size.width + diff_x - (col_index + size.width/2 - src_size.width) - 1);
-    rect.height = (row_index + size.height/2) < src_size.height ?
-                  (size.height + diff_y) :
-                  (size.height + diff_y - (row_index + size.height/2 - src_size.height) - 1);
-    //compute point
-    point.x = col_index - rect.x;
-    point.y = row_index - rect.y;
+    rect.x = (col - size.width / 2) > 0 ? (col - size.width / 2) : 0;
+    rect.y = (row - size.height / 2) > 0 ? (row - size.height / 2) : 0;
+
+    // how mush left overflow
+    int left_o = (col - size.width / 2)>0?0:(col - size.width / 2);
+    // how mush right overflow
+    int right_o = (col + size.width/2)<src_size.width?0:(src_size.width-1-(col + size.width/2));
+    // how much above overflow
+    int above_o = (row - size.height/2)>0?0:((row - size.height/2));
+    // how mush below overflow
+    int below_o = (row + size.height/2)<src_size.height?0:(src_size.height-1-(row + size.height/2));
+
+    // compute rect width and height
+    rect.width = size.width + left_o + right_o;
+    rect.height = size.height + above_o + below_o;
+
+    // compute new location of point(row,col) in "rect"
+    point.x = col - rect.x;
+    point.y = row - rect.y;
 
     return rect;
 }

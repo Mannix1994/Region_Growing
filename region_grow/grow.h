@@ -40,7 +40,7 @@ public:
     explicit grow(double colorThreshold = 12);
 
     /**
-     * Region Growing algorithm, which is flood type algorithm
+     * Region Growing algorithm, which is floodfiil type algorithm
      * @param input a GpuMat compute using BGR2Lab
      * @param filled output image with filled buoys
      * @param edgeMap output image with only edges of final blobs
@@ -49,19 +49,19 @@ public:
      * @param color to determine the color to be filled with
      */
     void start_grow(const cv::cuda::GpuMat& input, cv::Mat& filled, cv::Mat& edgeMap,
-            int row_index, int col_index, Color color,cv::Size size=cv::Size(100,100));
+            int row_index, int col_index, Color color,cv::Size size=cv::Size(0,0));
 
     /**
-     * get the sub Rect, whose center point is (row_index,col_index), of input.
-     * @param src_size input size of a mat
-     * @param row_index the row index of center point
-     * @param col_index the cols index of center point
-     * @param point the location of (row_index,col_index) in sub Mat
-     * @param size region size
-     * @return a sub Mat
+     * get the sub rect, whose center point is (row_index,col_index), of src_size
+     * @param src_size input size of Mat or rect
+     * @param row the row index of center point
+     * @param col the cols index of center point
+     * @param point point the new location of (row_index,col_index) in sub rect
+     * @param size sub rect's size
+     * @return a sub rect
      */
     static cv::Rect get_sub_rect(const cv::Size &src_size, int row_index, int col_index, cv::Point &point
-            , cv::Size size = cv::Size(100, 100));
+            , cv::Size size = cv::Size(0,0));
 
     /**
      * turn a bgr Mat to a Lab Mat(using cuda)

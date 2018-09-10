@@ -15,6 +15,6 @@ add_subdirectory(region_grow)
 
 add_executable( ${PROJECT_NAME} ${INC} ${SRC})
 
-target_link_libraries( ${PROJECT_NAME} ${OpenCV_LIBS} region_grow)
+target_link_libraries( ${PROJECT_NAME} ${OpenCV_LIBS} region_grow pthread)
 
 add_definitions(-std=c++11)

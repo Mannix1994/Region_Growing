@@ -34,7 +34,13 @@ int main(int argc, char const **argv) {
     grow M(12.5);
     timer.rlog("part2");
 
-    M.start_grow(g_denoise, filled, edgeMap, 267, 108, grow::YELLOW, Size(200,200));
+    M.start_grow(g_denoise, // a blur mat of origin mat
+                 filled,    // a filled mat
+                 edgeMap,   // a edge mat
+                 267,       // seed point's row index
+                 108,       // seed point's col index
+                 grow::YELLOW,   // the color of filled area
+                 Size(200,200)); // the region size you want fill. smaller --> faster.
     timer.rlog("part3");
 
     M.start_grow(g_denoise, filled, edgeMap, 91, 468, grow::GREEN, Size(100,100));

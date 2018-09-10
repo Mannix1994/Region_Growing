@@ -42,33 +42,21 @@ bool grow::colorDistance(const Vec3b& a, const Vec3b& b, int colorThreshold)
  * Function to modify pixel values at a point as per seed pixel
  */
 void grow::modifyPixel(Mat &input, int row, int col, Color color) {
-    Vec3b &colorC = input.at<Vec3b>(row, col);
-
     switch (color){
         case RED:
-            colorC[0] = 0;
-            colorC[1] = 0;
-            colorC[2] = 255;
+            input.at<Vec3b>(row, col) = Vec3b(0,0,255);
             break;
         case GREEN:
-            colorC[0] = 0;
-            colorC[1] = 255;
-            colorC[2] = 0;
+            input.at<Vec3b>(row, col) = Vec3b(0,255,0);
             break;
         case YELLOW:
-            colorC[0] = 0;
-            colorC[1] = 255;
-            colorC[2] = 255;
+            input.at<Vec3b>(row, col) = Vec3b(0,255,255);
             break;
         case BLACK:
-            colorC[0] = 0;
-            colorC[1] = 0;
-            colorC[2] = 0;
+            input.at<Vec3b>(row, col) = Vec3b(0,0,0);
             break;
         case WHITE:
-            colorC[0] = 255;
-            colorC[1] = 255;
-            colorC[2] = 255;
+            input.at<Vec3b>(row, col) = Vec3b(255,255,255);
             break;
         default:
             break;

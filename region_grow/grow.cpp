@@ -59,9 +59,9 @@ void grow::start_grow(const Mat &input, Mat &filled, Mat &edgeMap, int row_index
     // call cuda to compute all the color distance between every point and seed point.
     // the color distance between input(i,j) and seed point(input(row_index,col_index)
     // is stored in distances(i,j).
-    Timer timer;
+//    Timer timer;
     compute_distance(input_sub, row_index, col_index, distances);
-    timer.rlog("compute_distance");
+//    timer.rlog("compute_distance");
 
     int row, col;
     long int count = 1;

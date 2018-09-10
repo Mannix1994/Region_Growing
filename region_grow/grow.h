@@ -47,6 +47,8 @@ public:
      * @param row_index Seed Pixel row index
      * @param col_index Seed Pixel col index
      * @param color to determine the color to be filled with
+     * @param size the region size you want fill. smaller --> faster.
+     * if parameter size is not set, the region will be entire Mat.
      */
     void start_grow(const cv::Mat& input, cv::Mat& filled, cv::Mat& edgeMap,
             int row_index, int col_index, Color color,cv::Size size=cv::Size(0,0));

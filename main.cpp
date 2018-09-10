@@ -25,13 +25,13 @@ int main(int argc, char const **argv) {
     M.start_grow(denoise, filled, edgeMap, 267, 108, grow::YELLOW, Size(200,200));
     timer.rlog("part3");
 
-    M.start_grow(denoise, filled, edgeMap, 91, 468, grow::GREEN);
+    M.start_grow(denoise, filled, edgeMap, 91, 468, grow::GREEN,Size(100,100));
     timer.rlog("part4");
 
-    M.start_grow(denoise, filled, edgeMap, 50, 173, grow::RED);
+    M.start_grow(denoise, filled, edgeMap, 50, 173, grow::RED,Size(100,100));
     timer.rlog("part5");
 
-    M.start_grow(denoise, filled, edgeMap, 247, 422, grow::WHITE);
+    M.start_grow(denoise, filled, edgeMap, 247, 422, grow::WHITE,Size(100,100));
     timer.rlog("part6");
 
 //    imshow("Original Image", denoise);

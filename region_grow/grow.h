@@ -49,7 +49,7 @@ public:
      * @param color to determine the color to be filled with
      */
     void start_grow(const cv::Mat& input, cv::Mat& filled, cv::Mat& edgeMap,
-            int row_index, int col_index, Color color,cv::Size size=cv::Size(100,100));
+            int row_index, int col_index, Color color,cv::Size size=cv::Size(0,0));
 
     /**
      * get the sub rect, whose center point is (row_index,col_index), of src_size

@@ -44,6 +44,8 @@ void grow::start_grow(const Mat &input, Mat &filled, Mat &edgeMap, int row_index
     if(input.size() != filled.size() || input.size() != edgeMap.size()){
         throw std::runtime_error("The sizes of input, filled and edgeMap are not equal with each other");
     }
+    if(size == Size(0,0))
+        size = input.size();
 
     Point p;
     Rect roi = get_sub_rect(input.size(), row_index, col_index, p, size);

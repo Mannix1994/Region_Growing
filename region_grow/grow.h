@@ -41,12 +41,14 @@ public:
 
     /**
      * Region Growing algorithm, which is floodfiil type algorithm
-     * @param input a GpuMat compute using BGR2Lab
+     * @param input a GpuMat compute by BGR2Lab
      * @param filled output image with filled buoys
      * @param edgeMap output image with only edges of final blobs
      * @param row_index Seed Pixel row index
      * @param col_index Seed Pixel col index
      * @param color to determine the color to be filled with
+     * @param size the region size you want fill. smaller --> faster.
+     * if parameter size is not set, the region will be entire Mat.
      */
     void start_grow(const cv::cuda::GpuMat& input, cv::Mat& filled, cv::Mat& edgeMap,
             int row_index, int col_index, Color color,cv::Size size=cv::Size(0,0));

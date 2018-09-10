@@ -41,9 +41,9 @@ public:
 
     /**
      * Region Growing algorithm, which is flood type algorithm
-     * @param input_sub
-     * @param filled_sub output image with filled buoys
-     * @param edgeMap_sub output image with only edges of final blobs
+     * @param input a BGR Mat
+     * @param filled output image with filled buoys
+     * @param edgeMap output image with only edges of final blobs
      * @param row_index Seed Pixel row index
      * @param col_index Seed Pixel col index
      * @param color to determine the color to be filled with

@@ -21,7 +21,12 @@ int main(int argc, char const **argv) {
     grow M(12);
     timer.rlog("part2");
 
-    M.start_grow(denoise, filled, edgeMap, 267, 108, grow::YELLOW);
+    M.start_grow(denoise, // a blur mat of origin mat
+                 filled,  // a filled mat
+                 edgeMap, // a edge mat
+                 267,     // seed point's row index
+                 108,     // seed point's col index
+                 grow::YELLOW);
     timer.rlog("part3");
 
     M.start_grow(denoise, filled, edgeMap, 91, 468, grow::YELLOW);
